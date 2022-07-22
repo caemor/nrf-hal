@@ -26,21 +26,16 @@ pub struct Radio<'c> {
     _clocks: PhantomData<&'c ()>,
 }
 
-/// Default Clear Channel Assessment method = Carrier sense
-pub const DEFAULT_CCA: Cca = Cca::CarrierSense;
-
-/// Default radio channel = Channel 11 (`2_405` MHz)
-pub const DEFAULT_CHANNEL: Channel = Channel::_11;
-
-/// Default TX power = 0 dBm
-pub const DEFAULT_TXPOWER: TxPower = TxPower::_0dBm;
-
 /// Default Start of Frame Delimiter = `0xA7` (IEEE compliant)
 pub const DEFAULT_SFD: u8 = 0xA7;
 
 // TODO expose the other variants in `pac::CCAMODE_A`
 /// Clear Channel Assessment method
+///
+/// Default Clear Channel Assessment method = Carrier sense
+#[derive(Default)]
 pub enum Cca {
+    #[default]
     /// Carrier sense
     CarrierSense,
     /// Energy Detection / Energy Above Threshold
@@ -57,7 +52,11 @@ pub enum Cca {
 /// IEEE 802.15.4 channels
 ///
 /// NOTE these are NOT the same as WiFi 2.4 GHz channels
+///
+/// Default radio channel = Channel 11 (`2_405` MHz)
+#[derive(Default)]
 pub enum Channel {
+    #[default]
     /// 2_405 MHz
     _11 = 5,
     /// 2_410 MHz
@@ -93,8 +92,10 @@ pub enum Channel {
 }
 
 /// Transmission power in dBm (decibel milliwatt)
+///
+/// Default TX power = 0 dBm
 // TXPOWERA enum minus the deprecated Neg30dBm variant and with better docs
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Default)]
 pub enum TxPower {
     /// +8 dBm
     Pos8dBm,
@@ -110,6 +111,7 @@ pub enum TxPower {
     Pos3dBm,
     /// +2 dBm
     Pos2dBm,
+    #[default]
     /// 0 dBm (1 mW)
     _0dBm,
     /// -4 dBm
@@ -212,10 +214,10 @@ impl<'c> Radio<'c> {
         }
 
         // set default settings
-        radio.set_channel(DEFAULT_CHANNEL);
-        radio.set_cca(DEFAULT_CCA);
+        radio.set_channel(Channel::default());
+        radio.set_cca(Cca::default());
         radio.set_sfd(DEFAULT_SFD);
-        radio.set_txpower(DEFAULT_TXPOWER);
+        radio.set_txpower(TxPower::default());
 
         radio
     }

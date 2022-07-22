@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-(no changes)
+- Bump MRSV to 1.62 for default enum feature
 
 ## [0.15.1]
 
